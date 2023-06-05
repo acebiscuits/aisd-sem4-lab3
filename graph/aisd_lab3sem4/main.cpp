@@ -516,12 +516,220 @@ void del_e(Graph<Vertex_type, Distance_type>& gr, bool dist)
 	}
 }
 
+template<typename Vertex_t, typename Distance_t>
+void shortest_path(Graph<Vertex_t, Distance_t>& gr)
+{
+	while (1)
+	{
+		Vertex_t from, to;
+		pair<pair<Distance_t, int>, vector<Vertex_t>> vec;
+		//pair<pair<Distance_t, int>, vector<Vertex_t>> vec_with_cyrc;
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+			cout << "enter from: ";
+			int choice = 0;
+			while (!(cin >> from) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text was entered");
+
+				break;
+			}
+			if (choice == 0)
+			{
+				if (!gr.has_vertex(from)) choice = s_choice(RED, "No vertex");
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else
+			{
+				cout << endl;
+				break;
+			}
+		}
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+			cout << "enter to: ";
+			int choice = 0;
+			while (!(cin >> to) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text was entered");
+
+				break;
+			}
+			if (choice == 0)
+			{
+				if (!gr.has_vertex(to)) choice = s_choice(RED, "No vertex");
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else
+			{
+				cout << endl;
+				break;
+			}
+		}
+		try
+		{
+			vec = gr.shortest_path(from, to, false);
+			//vec_with_cyrc = gr.shortest_path(from, to, true);
+			system("cls");
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			if (vec.first.second == 0)
+			{
+				cout << "path: ";
+				for (auto i = vec.second.begin(); i != vec.second.end(); i++)
+				{
+					cout << *(i);
+					if (i + 1 != vec.second.end()) cout << "-";
+				}
+				cout << endl << "distance: " << vec.first.first;
+			}
+			else if(vec.first.second == 1)
+			{
+				cout << "вершина недостижима";
+
+			}
+			else
+			{
+				cout << "на пути есть минусовой цикл";
+			}
+			char ch = _getch();
+		}
+		catch (const char* e)
+		{
+			int choice = s_choice(RED, e);
+			if (choice == 2) return;
+			else continue;
+		}
+		return;
+	}
+
+
+}
+
+template<typename Vertex_t, typename Distance_t>
+void walk(Graph<Vertex_t, Distance_t>& gr)
+{
+	while (1)
+	{
+		Vertex_t vertex_start;
+		vector<Vertex_t> vec;
+		//pair<pair<Distance_t, int>, vector<Vertex_t>> vec_with_cyrc;
+		while (1)
+		{
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+			cout << "enter vertex: ";
+			int choice = 0;
+			while (!(cin >> vertex_start) || (cin.peek() != '\n'))
+			{
+				cin.clear();
+				while (cin.get() != '\n');
+
+				choice = s_choice(RED, "Text was entered");
+
+				break;
+			}
+			if (choice == 0)
+			{
+				if (!gr.has_vertex(vertex_start)) choice = s_choice(RED, "No vertex");
+			}
+			if (choice == 1) continue;
+			else if (choice == 2) return;
+			else
+			{
+				cout << endl;
+				break;
+			}
+		}
+		
+		try
+		{
+			vec = gr.walk(vertex_start);
+			//vec_with_cyrc = gr.shortest_path(from, to, true);
+			system("cls");
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+
+				cout << "path: ";
+				for (auto i = vec.begin(); i != vec.end(); i++)
+				{
+					cout << *(i);
+					if (i + 1 != vec.end()) cout << "-";
+				}
+				
+			
+			char ch = _getch();
+		}
+		catch (const char* e)
+		{
+			int choice = s_choice(RED, e);
+			if (choice == 2) return;
+			else continue;
+		}
+		return;
+	}
+
+
+}
+
+template<typename Vertex_t, typename Distance_t>
+void lasttask(Graph<Vertex_t, Distance_t>& gr)
+{
+	while (1)
+	{
+		pair<Vertex_t, Distance_t> point;
+
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+			system("cls");
+			ConsoleCursorVisible(true, 100);
+
+
+
+		try
+		{
+			point = gr.task();
+			//vec_with_cyrc = gr.shortest_path(from, to, true);
+			system("cls");
+			SetConsoleTextAttribute(hStdOut, DEF_COL);
+
+			cout << "point: ";
+				cout << point.first<<endl;
+				cout << "avg dist: ";
+				cout << point.second << endl;
+
+			
+
+
+			char ch = _getch();
+		}
+		catch (const char* e)
+		{
+			int choice = s_choice(RED, e);
+			if (choice == 2) return;
+			else continue;
+		}
+		return;
+	}
+}
 
 int main()
 {
 	setlocale(0, "rus");
 	string main_menu[] = { "Добавить вершину","проверка вершины","удалить вершину","добавить ребро","проверить ребро с расстоянием","проверить ребро без расстояния",
-		"удалить ребро с расстоянием","удалить ребро без расстояния","заданиие","Выход (ESC)"};
+		"удалить ребро с расстоянием","удалить ребро без расстояния","кратчайший путь","обход","задание","Выход (ESC)"};
 	int active_menu = 0;
 	char ch;
 	Graph<int> gr;
@@ -590,6 +798,15 @@ int main()
 				break;
 			case 7:
 				del_e(gr, false);
+				break;
+			case 8:
+				shortest_path(gr);
+				break;
+			case 9:
+				walk(gr);
+				break;
+			case 10:
+				lasttask(gr);
 				break;
 			case size(main_menu) - 1:
 				SetConsoleTextAttribute(hStdOut, DEF_COL);
